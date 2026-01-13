@@ -719,6 +719,41 @@ describe('LangfuseExporter', () => {
         output: { result: 42 },
       });
     });
+
+    it('should include input in span updates when input is set after creation', async () => {
+      // This tests the fix for issue #11694 where input was null in Langfuse
+      // because input was only included in creates, not updates
+      const modelSpan = createMockSpan({
+        id: 'model-span',
+        name: 'model-step',
+        type: SpanType.MODEL_STEP,
+        isRoot: true,
+        attributes: { stepIndex: 0 },
+        // Note: input is NOT set initially (undefined)
+      });
+
+      await exporter.exportTracingEvent({
+        type: TracingEventType.SPAN_STARTED,
+        exportedSpan: modelSpan,
+      });
+
+      // Now update with input (simulating the step-start chunk arriving later)
+      modelSpan.input = { messages: [{ role: 'user', content: 'Hello' }] };
+      modelSpan.output = { text: 'Hi there!' };
+
+      await exporter.exportTracingEvent({
+        type: TracingEventType.SPAN_UPDATED,
+        exportedSpan: modelSpan,
+      });
+
+      // Verify that update includes the input
+      expect(mockSpan.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          input: { messages: [{ role: 'user', content: 'Hello' }] },
+          output: { text: 'Hi there!' },
+        }),
+      );
+    });
   });
 
   describe('Span Ending', () => {

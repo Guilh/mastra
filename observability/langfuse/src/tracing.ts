@@ -418,9 +418,11 @@ export class LangfuseExporter extends BaseExporter {
       payload.id = span.id;
       payload.name = span.name;
       payload.startTime = span.startTime;
-      if (span.input !== undefined) payload.input = span.input;
     }
 
+    // Include input/output for both creates and updates
+    // This ensures that when input is updated after span creation, it's sent to Langfuse
+    if (span.input !== undefined) payload.input = span.input;
     if (span.output !== undefined) payload.output = span.output;
     if (span.endTime !== undefined) payload.endTime = span.endTime;
 
