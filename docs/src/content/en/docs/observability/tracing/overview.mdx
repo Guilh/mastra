@@ -638,6 +638,35 @@ export const mastra = new Mastra({
 });
 ```
 
+### Default Values
+
+You can import `DEFAULT_SERIALIZATION_OPTIONS` to reference or extend the default values:
+
+```ts title="src/mastra/index.ts"
+import {
+  Observability,
+  DefaultExporter,
+  DEFAULT_SERIALIZATION_OPTIONS,
+} from "@mastra/observability";
+
+export const mastra = new Mastra({
+  observability: new Observability({
+    configs: {
+      default: {
+        serviceName: "my-service",
+        serializationOptions: {
+          // Double the default string length for larger payloads
+          maxStringLength: DEFAULT_SERIALIZATION_OPTIONS.maxStringLength * 2,
+          // Increase depth for deeply nested structures
+          maxDepth: DEFAULT_SERIALIZATION_OPTIONS.maxDepth * 2,
+        },
+        exporters: [new DefaultExporter()],
+      },
+    },
+  }),
+});
+```
+
 ### Available Options
 
 | Option | Default | Description |

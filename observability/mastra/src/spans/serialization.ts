@@ -35,6 +35,51 @@ export const DEFAULT_DEEP_CLEAN_OPTIONS: DeepCleanOptions = Object.freeze({
 });
 
 /**
+ * Default serialization options for user reference.
+ * These values control how span data (input, output, attributes) is truncated before export.
+ *
+ * Users can override these defaults by passing `serializationOptions` to their
+ * observability configuration.
+ *
+ * @example
+ * ```typescript
+ * import { Observability, DEFAULT_SERIALIZATION_OPTIONS, DefaultExporter } from '@mastra/observability';
+ *
+ * const mastra = new Mastra({
+ *   observability: new Observability({
+ *     configs: {
+ *       default: {
+ *         serviceName: 'my-service',
+ *         serializationOptions: {
+ *           // Double the default string length
+ *           maxStringLength: DEFAULT_SERIALIZATION_OPTIONS.maxStringLength * 2,
+ *           // Keep other defaults
+ *           maxDepth: DEFAULT_SERIALIZATION_OPTIONS.maxDepth,
+ *         },
+ *         exporters: [new DefaultExporter()],
+ *       },
+ *     },
+ *   }),
+ * });
+ * ```
+ */
+export const DEFAULT_SERIALIZATION_OPTIONS = Object.freeze({
+  /** Maximum length for string values before truncation */
+  maxStringLength: 1024,
+  /** Maximum depth for nested objects before replacement with [MaxDepth] */
+  maxDepth: 6,
+  /** Maximum number of items in arrays before truncation */
+  maxArrayLength: 50,
+  /** Maximum number of keys in objects before truncation */
+  maxObjectKeys: 50,
+}) satisfies Readonly<{
+  maxStringLength: number;
+  maxDepth: number;
+  maxArrayLength: number;
+  maxObjectKeys: number;
+}>;
+
+/**
  * Merge user-provided serialization options with defaults.
  * Returns a complete DeepCleanOptions object.
  */
