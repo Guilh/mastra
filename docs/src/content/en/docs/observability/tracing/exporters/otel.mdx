@@ -273,6 +273,12 @@ new OtelExporter({
 });
 ```
 
+:::tip Laminar-Native Exporter
+
+For Laminar-specific features, consider using the dedicated [`@mastra/laminar`](/docs/v1/observability/tracing/exporters/laminar) exporter instead. It sets Laminar-native attributes (`lmnr.span.path`, `lmnr.span.ids_path`, `lmnr.association.properties.*`) for accurate span hierarchy rendering and tag visualization in the Laminar dashboard.
+
+:::
+
 ### Datadog
 
 [Datadog](https://www.datadoghq.com/) APM provides application performance monitoring with distributed tracing. To send traces to Datadog via OTLP, you need the Datadog Agent running with OTLP ingestion enabled.
