@@ -50,6 +50,7 @@ export abstract class BaseAITracing extends MastraBase implements AITracing {
       processors: config.processors ?? [],
       includeInternalSpans: config.includeInternalSpans ?? false,
       runtimeContextKeys: config.runtimeContextKeys ?? [],
+      serializationOptions: config.serializationOptions,
     };
   }
 

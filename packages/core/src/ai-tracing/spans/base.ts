@@ -1,4 +1,5 @@
-import { deepClean } from '../serialization';
+import { deepClean, mergeSerializationOptions } from '../serialization';
+import type { DeepCleanOptions } from '../serialization';
 import type {
   AISpan,
   AISpanTypeMap,
@@ -84,12 +85,18 @@ export abstract class BaseAISpan<TType extends AISpanType = any> implements AISp
   public traceState?: TraceState;
   /** Parent span ID (for root spans that are children of external spans) */
   protected parentSpanId?: string;
+  /** Deep clean options for serialization */
+  protected deepCleanOptions: DeepCleanOptions;
 
   constructor(options: CreateSpanOptions<TType>, aiTracing: AITracing) {
+    // Get serialization options from AITracing instance config
+    const serializationOptions = aiTracing.getConfig().serializationOptions;
+    this.deepCleanOptions = mergeSerializationOptions(serializationOptions);
+
     this.name = options.name;
     this.type = options.type;
-    this.attributes = deepClean(options.attributes) || ({} as AISpanTypeMap[TType]);
-    this.metadata = deepClean(options.metadata);
+    this.attributes = deepClean(options.attributes, this.deepCleanOptions) || ({} as AISpanTypeMap[TType]);
+    this.metadata = deepClean(options.metadata, this.deepCleanOptions);
     this.parent = options.parent;
     this.startTime = new Date();
     this.aiTracing = aiTracing;
@@ -100,9 +107,9 @@ export abstract class BaseAISpan<TType extends AISpanType = any> implements AISp
     if (this.isEvent) {
       // Event spans don't have endTime or input.
       // Event spans are immediately emitted by the BaseAITracing class via the end() event.
-      this.output = deepClean(options.output);
+      this.output = deepClean(options.output, this.deepCleanOptions);
     } else {
-      this.input = deepClean(options.input);
+      this.input = deepClean(options.input, this.deepCleanOptions);
     }
   }
 
