@@ -3,6 +3,7 @@ import type { PubSub } from '../events';
 import type { Mastra } from '../mastra';
 import type { TracingContext } from '../observability';
 import type { RequestContext } from '../request-context';
+import type { PublicSchema } from '../schema/schema';
 import type { InferZodLikeSchema, SchemaWithValidation } from '../stream/base/schema';
 import type { ToolStream } from '../tools/stream';
 import type { DynamicArgument } from '../types';
@@ -87,11 +88,11 @@ export interface Step<
 > {
   id: TStepId;
   description?: string;
-  inputSchema: SchemaWithValidation<TInput>;
-  outputSchema: SchemaWithValidation<TOutput>;
-  resumeSchema?: SchemaWithValidation<TResume>;
-  suspendSchema?: SchemaWithValidation<TSuspend>;
-  stateSchema?: SchemaWithValidation<TState>;
+  inputSchema: PublicSchema<TInput>;
+  outputSchema: PublicSchema<TOutput>;
+  resumeSchema?: PublicSchema<TResume>;
+  suspendSchema?: PublicSchema<TSuspend>;
+  stateSchema?: PublicSchema<TState>;
   execute: ExecuteFunction<TState, TInput, TOutput, TResume, TSuspend, TEngineType>;
   scorers?: DynamicArgument<MastraScorers>;
   retries?: number;

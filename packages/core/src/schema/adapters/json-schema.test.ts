@@ -1,7 +1,7 @@
 import type { JSONSchema7 } from 'json-schema';
 import { describe, it, expect } from 'vitest';
-import { isStandardSchema, isStandardJSONSchema, isStandardSchemaWithJSON } from '../standard-schema';
-import { toStandardSchema, isJsonSchemaWrapper, isJsonSchemaStandardSchema, JsonSchemaWrapper } from './json-schema';
+import { isStandardSchemaWithJSON } from '../standard-schema';
+import { toStandardSchema } from './json-schema';
 
 describe('json-schema standard-schema adapter', () => {
   describe('toStandardSchema', () => {
@@ -209,28 +209,12 @@ describe('json-schema standard-schema adapter', () => {
     });
   });
 
-  describe('isJsonSchemaWrapper', () => {
-    it('should return true for JsonSchemaWrapper instances', () => {
-      const jsonSchema: JSONSchema7 = { type: 'string' };
-      const wrapper = toStandardSchema(jsonSchema);
-
-      expect(isJsonSchemaWrapper(wrapper)).toBe(true);
-    });
-
-    it('should return false for non-wrapper values', () => {
-      expect(isJsonSchemaWrapper(null)).toBe(false);
-      expect(isJsonSchemaWrapper(undefined)).toBe(false);
-      expect(isJsonSchemaWrapper({})).toBe(false);
-      expect(isJsonSchemaWrapper({ '~standard': {} })).toBe(false);
-    });
-  });
-
-  describe('isJsonSchemaStandardSchema', () => {
+  describe('isStandardSchemaWithJSON', () => {
     it('should return true for JSON Schema wrapped schemas', () => {
       const jsonSchema: JSONSchema7 = { type: 'string' };
       const wrapper = toStandardSchema(jsonSchema);
 
-      expect(isJsonSchemaStandardSchema(wrapper)).toBe(true);
+      expect(isStandardSchemaWithJSON(wrapper)).toBe(true);
     });
 
     it('should return false for non-json-schema vendors', () => {
@@ -242,36 +226,13 @@ describe('json-schema standard-schema adapter', () => {
         },
       };
 
-      expect(isJsonSchemaStandardSchema(mockSchema)).toBe(false);
+      expect(isStandardSchemaWithJSON(mockSchema)).toBe(false);
     });
 
     it('should return false for non-schema values', () => {
-      expect(isJsonSchemaStandardSchema(null)).toBe(false);
-      expect(isJsonSchemaStandardSchema(undefined)).toBe(false);
-      expect(isJsonSchemaStandardSchema({})).toBe(false);
-    });
-  });
-
-  describe('standard-schema type guards', () => {
-    it('should pass isStandardSchema check', () => {
-      const jsonSchema: JSONSchema7 = { type: 'string' };
-      const wrapper = toStandardSchema(jsonSchema);
-
-      expect(isStandardSchema(wrapper)).toBe(true);
-    });
-
-    it('should pass isStandardJSONSchema check', () => {
-      const jsonSchema: JSONSchema7 = { type: 'string' };
-      const wrapper = toStandardSchema(jsonSchema);
-
-      expect(isStandardJSONSchema(wrapper)).toBe(true);
-    });
-
-    it('should pass isStandardSchemaWithJSON check', () => {
-      const jsonSchema: JSONSchema7 = { type: 'string' };
-      const wrapper = toStandardSchema(jsonSchema);
-
-      expect(isStandardSchemaWithJSON(wrapper)).toBe(true);
+      expect(isStandardSchemaWithJSON(null)).toBe(false);
+      expect(isStandardSchemaWithJSON(undefined)).toBe(false);
+      expect(isStandardSchemaWithJSON({})).toBe(false);
     });
   });
 });

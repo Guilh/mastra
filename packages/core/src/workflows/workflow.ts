@@ -22,6 +22,7 @@ import { ProcessorRunner } from '../processors';
 import type { Processor } from '../processors';
 import { ProcessorStepOutputSchema, ProcessorStepInputSchema } from '../processors/step-schema';
 import type { ProcessorStepOutput } from '../processors/step-schema';
+import type { PublicSchema, StandardSchemaWithJSON } from '../schema/schema';
 import type { StorageListWorkflowRunsInput } from '../storage';
 import type { InferSchemaOutput, InferZodLikeSchema, OutputSchema, SchemaWithValidation } from '../stream/base/schema';
 import { WorkflowRunOutput } from '../stream/RunOutput';
@@ -1207,9 +1208,9 @@ export class Workflow<
 {
   public id: TWorkflowId;
   public description?: string | undefined;
-  public inputSchema: SchemaWithValidation<TInput>;
-  public outputSchema: SchemaWithValidation<TOutput>;
-  public stateSchema?: SchemaWithValidation<TState>;
+  public inputSchema: StandardSchemaWithJSON<TInput>;
+  public outputSchema: StandardSchemaWithJSON<TOutput>;
+  public stateSchema?: StandardSchemaWithJSON<TState>;
   public steps: Record<string, StepWithComponent>;
   public stepDefs?: TSteps;
   public engineType: WorkflowEngineType = 'default';

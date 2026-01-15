@@ -1,5 +1,38 @@
+import { schemaSymbol } from '@internal/ai-sdk-v5';
+import type { Schema } from '@internal/ai-sdk-v5';
 import type { StandardJSONSchemaV1, StandardSchemaV1 } from '@standard-schema/spec';
+import type { JSONSchema7 } from 'json-schema';
+import z3 from 'zod/v3';
+import { toStandardSchema as toStandardSchemaAiSdk } from './adapters/ai-sdk';
+import { toStandardSchema as toStandardSchemaJsonSchema } from './adapters/json-schema';
+import { toStandardSchema as toStandardSchemaZodV3 } from './adapters/zod-v3';
+import type { PublicSchema } from './schema';
 import type { StandardSchemaWithJSON } from './standard-schema.types';
+
+export type {
+  StandardSchemaWithJSON,
+  StandardSchemaWithJSONProps,
+  InferInput,
+  InferOutput,
+} from './standard-schema.types';
+
+export function toStandardSchema<T = unknown>(schema: PublicSchema<T>): StandardSchemaWithJSON<T> {
+  if (isStandardSchemaWithJSON(schema)) {
+    return schema;
+  }
+
+  if (schema instanceof z3.ZodAny) {
+    return toStandardSchemaZodV3(schema);
+  }
+
+  if ((schema as Schema<T>)[schemaSymbol]) {
+    return toStandardSchemaAiSdk(schema as Schema<T>);
+  }
+
+  return toStandardSchemaJsonSchema(schema as JSONSchema7);
+
+  // throw new Error('Unsupported schema type');
+}
 
 /**
  * Type guard to check if a value implements the StandardSchemaV1 interface.

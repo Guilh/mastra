@@ -8,6 +8,7 @@ import type { IMastraLogger } from '../logger';
 import type { Mastra } from '../mastra';
 import type { AnySpan, TracingContext, TracingPolicy, TracingProperties } from '../observability';
 import type { RequestContext } from '../request-context';
+import type { PublicSchema } from '../schema/schema';
 import type { OutputSchema } from '../stream';
 import type { InferZodLikeSchema, SchemaWithValidation } from '../stream/base/schema';
 import type { ChunkType, WorkflowStreamEvent } from '../stream/types';
@@ -698,9 +699,9 @@ export type WorkflowConfig<TWorkflowId extends string, TState, TInput, TOutput, 
   mastra?: Mastra;
   id: TWorkflowId;
   description?: string | undefined;
-  inputSchema: SchemaWithValidation<TInput>;
-  outputSchema: SchemaWithValidation<TOutput>;
-  stateSchema?: SchemaWithValidation<TState>;
+  inputSchema: PublicSchema<TInput>;
+  outputSchema: PublicSchema<TOutput>;
+  stateSchema?: PublicSchema<TState>;
   executionEngine?: ExecutionEngine;
   steps?: TSteps;
   retryConfig?: {
